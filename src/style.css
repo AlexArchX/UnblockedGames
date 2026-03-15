@@ -6,11 +6,22 @@
 }
 
 body {
-  @apply bg-zinc-950 text-zinc-100 antialiased font-sans;
+  background-color: #09090b; /* zinc-950 */
+  color: #f4f4f5; /* zinc-100 */
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .glass-card {
-  @apply bg-zinc-900/50 border border-white/10 backdrop-blur-sm hover:border-white/20 transition-all duration-300;
+  background-color: rgba(24, 24, 27, 0.5); /* zinc-900/50 */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .game-grid {
@@ -25,11 +36,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-zinc-950;
+  background: #09090b;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-zinc-800 rounded-full hover:bg-zinc-700 transition-colors;
+  background: #27272a;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
 }
 
 .line-clamp-2 {
@@ -37,4 +53,9 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Ensure hidden class works */
+.hidden {
+  display: none !important;
 }

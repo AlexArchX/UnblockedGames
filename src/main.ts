@@ -1,8 +1,10 @@
-let games = [];
-let selectedGame = null;
-let searchQuery = '';
+import { Game } from './types';
 
-async function init() {
+let games: Game[] = [];
+let selectedGame: Game | null = null;
+let searchQuery: string = '';
+
+async function init(): Promise<void> {
   try {
     const response = await fetch('/src/data/games.json');
     games = await response.json();
@@ -12,10 +14,12 @@ async function init() {
   }
 }
 
-function render() {
+function render(): void {
   const mainContent = document.getElementById('main-content');
   const searchContainer = document.getElementById('search-container');
   
+  if (!mainContent || !searchContainer) return;
+
   if (selectedGame) {
     searchContainer.classList.add('hidden');
     mainContent.innerHTML = renderPlayer(selectedGame);
@@ -29,7 +33,7 @@ function render() {
   }
 }
 
-function renderGrid(filteredGames) {
+function renderGrid(filteredGames: Game[]): string {
   if (filteredGames.length === 0) {
     return `
       <div class="text-center py-20">
@@ -38,7 +42,7 @@ function renderGrid(filteredGames) {
         </div>
         <h3 class="text-xl font-semibold mb-2">No games found</h3>
         <p class="text-zinc-500">Try searching for something else or browse our collection.</p>
-        <button onclick="clearSearch()" class="mt-6 text-emerald-500 hover:underline font-medium">Clear search</button>
+        <button onclick="window.clearSearch()" class="mt-6 text-emerald-500 hover:underline font-medium">Clear search</button>
       </div>
     `;
   }
@@ -46,7 +50,7 @@ function renderGrid(filteredGames) {
   return `
     <div class="game-grid">
       ${filteredGames.map(game => `
-        <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="playGame('${game.id}')">
+        <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="window.playGame('${game.id}')">
           <div class="aspect-[4/3] overflow-hidden relative">
             <img
               src="${game.thumbnail}"
@@ -68,11 +72,11 @@ function renderGrid(filteredGames) {
   `;
 }
 
-function renderPlayer(game) {
+function renderPlayer(game: Game): string {
   return `
     <div class="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div class="flex items-center justify-between">
-        <button onclick="backToGrid()" class="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors group">
+        <button onclick="window.backToGrid()" class="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors group">
           <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
           <span>Back to Games</span>
         </button>
@@ -104,25 +108,26 @@ function renderPlayer(game) {
 }
 
 // Global functions for HTML event handlers
-window.playGame = (id) => {
-  selectedGame = games.find(g => g.id === id);
+(window as any).playGame = (id: string) => {
+  selectedGame = games.find(g => g.id === id) || null;
   window.scrollTo({ top: 0, behavior: 'smooth' });
   render();
 };
 
-window.backToGrid = () => {
+(window as any).backToGrid = () => {
   selectedGame = null;
   render();
 };
 
-window.clearSearch = () => {
+(window as any).clearSearch = () => {
   searchQuery = '';
-  document.getElementById('search-input').value = '';
+  const input = document.getElementById('search-input') as HTMLInputElement;
+  if (input) input.value = '';
   render();
 };
 
-window.handleSearch = (e) => {
-  searchQuery = e.target.value;
+(window as any).handleSearch = (e: Event) => {
+  searchQuery = (e.target as HTMLInputElement).value;
   render();
 };
 
