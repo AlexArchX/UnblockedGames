@@ -1,3 +1,4 @@
+import './style.css';
 import { Game } from './types';
 
 let games: Game[] = [];
