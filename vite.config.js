@@ -6,7 +6,8 @@ export default defineConfig({
   server: {
     port: 3000,
     host: '0.0.0.0',
-    hmr: process.env.DISABLE_HMR !== 'true',
+    allowedHosts: true,
+    hmr: false, // Disable HMR as per guidelines for stability
   },
   build: {
     outDir: 'dist',
